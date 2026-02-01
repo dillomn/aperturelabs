@@ -11,7 +11,6 @@
 <body>
     <div class="scanlines"></div>
     <div class="vignette"></div>
-
     <div class="terminal-wrapper">
         <header class="fixed-element">
             <div class="logo-container">
@@ -41,22 +40,20 @@
             <h1 class="domain-header">APERTURE SCIENCE</h1>
             <div class="status-line">SYSTEM STATUS: <span class="online">ONLINE</span> | TEST SUBJECT: #1498</div>
         </header>
-
         <main class="console-area">
             <div id="typed-text"></div>
             <span class="cursor">_</span>
         </main>
-
         <footer class="fixed-element">
             <nav class="links">
                 <a href="https://library.aperturelabs.au" class="btn">[ LIBRARY ]</a>
                 <a href="https://requests.aperturelabs.au" class="btn">[ REQUEST ]</a>
+                <a href="https://share.aperturelabs.au/g/YtUuZn4YB9MF5d3B" class="btn">[ SHARE ]</a>
                 <a href="https://status.aperturelabs.au/status/aperturelabs" class="btn">[ STATUS ]</a>
             </nav>
             <p class="disclaimer">© 1943 APERTURE SCIENCE INC.</p>
         </footer>
     </div>
-
     <script>
         const lines = [
             "INITIALIZING APERTURE SCIENCE PotatOS...",
@@ -66,11 +63,9 @@
             "REMINDER: BE CAREFUL WITH THE PORTAL DEVICE.",
             "SELECT A DIRECTORY:"
         ];
-
         const container = document.getElementById('typed-text');
         let lineIdx = 0;
         let charIdx = 0;
-
         function type() {
             if (lineIdx < lines.length) {
                 if (charIdx === 0) {
@@ -84,7 +79,6 @@
                 const currentP = container.lastElementChild;
                 currentP.innerHTML += lines[lineIdx][charIdx];
                 charIdx++;
-
                 if (charIdx < lines[lineIdx].length) {
                     setTimeout(type, 30);
                 } else {
@@ -98,15 +92,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
