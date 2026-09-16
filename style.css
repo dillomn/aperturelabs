@@ -115,6 +115,23 @@ body {
 
 .online { color: #fff; font-weight: bold; }
 
+/* System status (pulled from Uptime Kuma) */
+.status-block { flex-shrink: 0; margin: 6px 0 12px; }
+.status-head { text-align: center; letter-spacing: 2px; font-size: 0.78rem; opacity: 0.85; margin-bottom: 8px; }
+.status-hint { opacity: 0.55; }
+.status-hint.up { color: #fff; opacity: 0.9; }
+.status-hint.down { color: #ff4d3d; opacity: 1; }
+.status-list { list-style: none; margin: 0 auto; padding: 0; max-width: 460px; font-size: 0.82rem; }
+.status-row { display: flex; align-items: center; gap: 8px; padding: 3px 2px; }
+.status-name { white-space: nowrap; letter-spacing: 1px; }
+.status-leader { flex: 1; height: 0; border-bottom: 1px dotted rgba(255, 159, 0, 0.35); }
+.status-state { letter-spacing: 1px; }
+.status-state.up { color: #fff; }
+.status-state.down { color: #ff4d3d; font-weight: bold; }
+.status-state.maint, .status-state.pending { color: var(--aperture-orange); opacity: 0.8; }
+.status-uptime { min-width: 5ch; text-align: right; opacity: 0.55; }
+.status-row.dim { opacity: 0.5; justify-content: center; }
+
 /* The Typing Zone */
 .console-area {
     flex-grow: 1;
