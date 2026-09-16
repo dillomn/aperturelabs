@@ -129,6 +129,7 @@ body {
 .status-bars .bar.down { background: #ff4d3d; box-shadow: 0 0 3px rgba(255, 77, 61, 0.6); }
 .status-bars .bar.maint, .status-bars .bar.pending { background: rgba(255, 159, 0, 0.3); box-shadow: none; }
 .status-bars .bar.empty { background: rgba(255, 159, 0, 0.08); box-shadow: none; }
+.status-bars .bar.off { background: rgba(255, 77, 61, 0.55); box-shadow: none; }
 .status-state { flex: 0 0 8ch; margin-left: auto; letter-spacing: 1px; text-align: right; }
 .status-state.up { color: #fff; }
 .status-state.down { color: #ff4d3d; font-weight: bold; }

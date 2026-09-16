@@ -100,6 +100,9 @@
             const SLUG = 'aperturelabs';
             const listEl = document.getElementById('statusList');
             const hintEl = document.getElementById('statusHint');
+            // Fallback names for a cold failure (before any successful load); real names come from the API.
+            const FALLBACK = [{ name: 'Library' }, { name: 'Requests' }, { name: 'Sonarr' }, { name: 'Radarr' }];
+            let lastMonitors = null;
             function state(s) {
                 if (s === 1) return { c: 'up', t: 'ONLINE' };
                 if (s === 0) return { c: 'down', t: 'OFFLINE' };
@@ -130,6 +133,15 @@
                 li.append(n, bars, s, u);
                 return li;
             }
+            function offlineRow(name) {
+                const li = document.createElement('li'); li.className = 'status-row';
+                const n = document.createElement('span'); n.className = 'status-name'; n.textContent = name.toUpperCase();
+                const bars = document.createElement('span'); bars.className = 'status-bars';
+                for (let i = 0; i < 30; i++) { const b = document.createElement('i'); b.className = 'bar off'; bars.appendChild(b); }
+                const s = document.createElement('span'); s.className = 'status-state down'; s.textContent = 'OFFLINE';
+                const u = document.createElement('span'); u.className = 'status-uptime'; u.textContent = '';
+                li.append(n, bars, s, u); return li;
+            }
             function load() {
                 Promise.all([
                     fetch(BASE + '/api/status-page/' + SLUG).then(r => r.json()),
@@ -138,6 +150,7 @@
                     const mons = [];
                     (cfg.publicGroupList || []).forEach(g => (g.monitorList || []).forEach(m => mons.push(m)));
                     if (!mons.length) { hintEl.textContent = '· no monitors'; return; }
+                    lastMonitors = mons.map(m => ({ id: m.id, name: m.name }));
                     const beats = hb.heartbeatList || {}, ups = hb.uptimeList || {};
                     const last = m => { const a = beats[m.id] || []; return a.length ? a[a.length - 1].status : 2; };
                     const allUp = mons.every(m => last(m) === 1);
@@ -146,9 +159,13 @@
                     listEl.innerHTML = '';
                     mons.forEach(m => listEl.appendChild(row(m.name, beats[m.id] || [], ups[m.id + '_24'])));
                 }).catch(() => {
-                    hintEl.textContent = '· feed unavailable';
-                    hintEl.className = 'status-hint';
-                    listEl.innerHTML = '<li class="status-row dim">status feed unreachable</li>';
+                    // Status host unreachable — on this homelab the tunnel and services share fate
+                    // (same power, VM01 tunnel), so treat everything as OFFLINE rather than hiding it.
+                    hintEl.textContent = '· UNREACHABLE';
+                    hintEl.className = 'status-hint down';
+                    const mons = (lastMonitors && lastMonitors.length) ? lastMonitors : FALLBACK;
+                    listEl.innerHTML = '';
+                    mons.forEach(m => listEl.appendChild(offlineRow(m.name)));
                 });
             }
             load();
