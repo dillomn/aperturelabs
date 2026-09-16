@@ -113,7 +113,12 @@
                 li.className = 'status-row';
                 const n = document.createElement('span'); n.className = 'status-name'; n.textContent = name.toUpperCase();
                 const bars = document.createElement('span'); bars.className = 'status-bars';
-                arr.slice(-40).forEach(h => {
+                const N = 30;
+                const recent = arr.slice(-N);
+                for (let i = recent.length; i < N; i++) {           // pad left so every strip is the same length
+                    const e = document.createElement('i'); e.className = 'bar empty'; bars.appendChild(e);
+                }
+                recent.forEach(h => {
                     const b = document.createElement('i');
                     b.className = 'bar ' + cls(h.status);
                     b.title = (h.time || '') + ' · ' + cls(h.status).toUpperCase() + (h.ping ? ' · ' + h.ping + 'ms' : '');
