@@ -106,15 +106,23 @@
                 if (s === 3) return { c: 'maint', t: 'MAINT' };
                 return { c: 'pending', t: 'PENDING' };
             }
-            function row(name, st, up) {
+            function cls(s) { return s === 1 ? 'up' : s === 0 ? 'down' : s === 3 ? 'maint' : 'pending'; }
+            function row(name, arr, up) {
+                const st = state(arr.length ? arr[arr.length - 1].status : 2);
                 const li = document.createElement('li');
                 li.className = 'status-row';
                 const n = document.createElement('span'); n.className = 'status-name'; n.textContent = name.toUpperCase();
-                const l = document.createElement('span'); l.className = 'status-leader';
+                const bars = document.createElement('span'); bars.className = 'status-bars';
+                arr.slice(-40).forEach(h => {
+                    const b = document.createElement('i');
+                    b.className = 'bar ' + cls(h.status);
+                    b.title = (h.time || '') + ' · ' + cls(h.status).toUpperCase() + (h.ping ? ' · ' + h.ping + 'ms' : '');
+                    bars.appendChild(b);
+                });
                 const s = document.createElement('span'); s.className = 'status-state ' + st.c; s.textContent = st.t;
                 const u = document.createElement('span'); u.className = 'status-uptime';
                 u.textContent = (up == null) ? '' : (Math.round(up * 1000) / 10) + '%';
-                li.append(n, l, s, u);
+                li.append(n, bars, s, u);
                 return li;
             }
             function load() {
@@ -131,7 +139,7 @@
                     hintEl.textContent = allUp ? '· ALL SYSTEMS NOMINAL' : '· DEGRADED';
                     hintEl.className = 'status-hint ' + (allUp ? 'up' : 'down');
                     listEl.innerHTML = '';
-                    mons.forEach(m => listEl.appendChild(row(m.name, state(last(m)), ups[m.id + '_24'])));
+                    mons.forEach(m => listEl.appendChild(row(m.name, beats[m.id] || [], ups[m.id + '_24'])));
                 }).catch(() => {
                     hintEl.textContent = '· feed unavailable';
                     hintEl.className = 'status-hint';
